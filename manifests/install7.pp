@@ -39,6 +39,13 @@ define jdk7::install7 (
       $user              = 'root'
       $group             = 'root'
     }
+    'AIX': {
+      $install_version   = 'AIX'
+      $install_extension = '.tar.gz'
+      $path              = '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:'
+      $user              = 'root'
+      $group             = 'root'
+    }
     default: {
       fail("Unrecognized operating system ${::kernel}, please use it on a Linux host")
     }

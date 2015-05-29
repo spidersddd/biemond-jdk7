@@ -14,7 +14,10 @@
 #
 class jdk7::urandomfix () {
 
-  $path = '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:'
+  case $::kernel {
+    'Linux': { $path = '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:' }
+    default : { fail('Unrecognized operating system') }
+  }
 
   package { 'rng-tools':
     ensure => present,
@@ -30,21 +33,6 @@ class jdk7::urandomfix () {
           user    => 'root',
           path    => $path,
         }
-
-        exec { 'systemctl-daemon-reload':
-          command     => 'systemctl --system daemon-reload',
-          path        => $path,
-          subscribe   => Exec['set urandom /lib/systemd/system/rngd.service'],
-          refreshonly => true,
-          notify      => Service['rngd'],
-        }
-
-        service { 'rngd':
-          ensure  => 'running',
-          enable  => true,
-          require => Exec['systemctl-daemon-reload'],
-        }
-
       } else {
         exec { 'set urandom /etc/sysconfig/rngd':
           command   => "sed -i -e's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \\/dev\\/urandom -o \\/dev\\/random -b\"/g' /etc/sysconfig/rngd",
@@ -53,18 +41,18 @@ class jdk7::urandomfix () {
           path      => $path,
           logoutput => true,
           user      => 'root',
-          notify    => Service['rngd'],
         }
 
-        service { 'rngd':
-          ensure  => 'running',
+        service { 'start rngd service':
+          ensure  => true,
+          name    => 'rngd',
           enable  => true,
           require => Exec['set urandom /etc/sysconfig/rngd'],
         }
 
         exec { 'chkconfig rngd':
           command   => 'chkconfig --add rngd',
-          require   => Service['rngd'],
+          require   => Service['start rngd service'],
           unless    => "chkconfig | /bin/grep 'rngd'",
           path      => $path,
           logoutput => true,
@@ -80,11 +68,11 @@ class jdk7::urandomfix () {
         path      => $path,
         logoutput => true,
         user      => 'root',
-        notify    => Service['rng-tools'],
       }
 
-      service { 'rng-tools':
-        ensure  => 'running',
+      service { 'start rng-tools service':
+        ensure  => true,
+        name    => 'rng-tools',
         enable  => true,
         require => Exec['set urandom /etc/default/rng-tools'],
       }

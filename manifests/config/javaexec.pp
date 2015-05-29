@@ -98,12 +98,18 @@ define jdk7::config::javaexec (
 
   $alternatives = [ 'java', 'javac', 'keytool']
 
-  jdk7::config::alternatives{ $alternatives:
-    java_home_dir => $java_homes_dir,
-    full_version  => $full_version,
-    priority      => $alternatives_priority,
-    user          => $user,
-    group         => $group,
+  case $::kernel { 
+    'Linux', 'SunOS': {
+      jdk7::config::alternatives{ $alternatives:
+        java_home_dir => $java_homes_dir,
+        full_version  => $full_version,
+        priority      => $alternatives_priority,
+        user          => $user,
+        group         => $group,
+      }
+    }
+    'AIX': {
+      notify {"AIX does not use alternatives":}
+    }
   }
-
 }
