@@ -44,7 +44,7 @@ define jdk7::install7 (
       $install_extension = '.tar.gz'
       $path              = '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:'
       $user              = 'root'
-      $group             = 'root'
+      $group             = 'system'
     }
     default: {
       fail("Unrecognized operating system ${::kernel}, please use it on a Linux host")
