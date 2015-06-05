@@ -79,7 +79,7 @@ define jdk7::install7_aix (
 
   # install on client
   exec { "installp jre deps ${fullVersion} ${version}":
-    command => "installp_r -a -Y -R ${javaHomes} -d ${downloadDir}/${jre_file} ${fullVersion}_${type}.sdk",
+    command => "installp_r -a -Y -R ${javaHomes} -d ${downloadDir}/${jre_file} ${fullVersion}_${type}.jre",
     unless  => "test -d ${javaHomes}",
     path    => $path,
     user    => $user,

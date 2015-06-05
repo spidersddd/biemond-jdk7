@@ -6,7 +6,7 @@ Works with Puppet 2.7 or higher
 
 Should work for RedHat, CentOS, Ubuntu, Debian, Suse SLES or OracleLinux 
 
-installs only the java tar.gz files
+installs only the java tar or tar.gz files
 -----------------------------------
 this is because rpm post install fails with some pack error
 
@@ -21,7 +21,7 @@ add the jdk-7u25-linux-x64.tar.gz (downloaded from Oracle website) to the files 
 
 urandomfix class for lack of entropy this rngd or or rng-tools service add extra random number  
 
-example usage
+example usage Linux
 -------------
 
 	  include jdk7
@@ -66,5 +66,15 @@ or with cryptography Extension File US export
 	  
 	  class { 'jdk7::urandomfix' :}
   
+or with AIX install of IBM java
+
+          jdk7::install7{ 'Java71_64':
+              version      => "71" ,
+              fullVersion  => "Java71",
+              x64          => true,
+              downloadDir  => "/data/install",
+              sourcePath   => "/software",
+              javaHomes    => '/usr/java',
+          }
   
  
