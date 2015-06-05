@@ -1,4 +1,4 @@
-# jdk7::instal7
+# jdk7::install7
 #
 # On Linux low entropy can cause certain operations to be very slow.
 # Encryption operations need entropy to ensure randomness. Entropy is
@@ -40,11 +40,7 @@ define jdk7::install7 (
       $group             = 'root'
     }
     'AIX': {
-      $install_version   = 'AIX'
-      $install_extension = '.tar.gz'
-      $path              = '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:'
-      $user              = 'root'
-      $group             = 'system'
+      fail("Unrecognized operating system ${::kernel}, please use jdk7::install7_aix on this host")
     }
     default: {
       fail("Unrecognized operating system ${::kernel}, please use it on a Linux host")
